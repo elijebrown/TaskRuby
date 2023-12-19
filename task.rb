@@ -12,10 +12,6 @@ class Task
         @created = Time.now
     end
 
-    def removeAllChildren()
-        @children = DoublyLinkedList.new # this feels so wrong coming from C... 
-    end
-    
 end
 
 # class: TaskList

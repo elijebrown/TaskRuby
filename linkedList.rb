@@ -50,3 +50,10 @@ class DoublyLinkedList
             end
             node = node.next
         end
+
+    # clear
+    def clear
+        @head = nil
+        @tail = nil
+        @size = 0
+    end
