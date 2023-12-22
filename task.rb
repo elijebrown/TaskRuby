@@ -1,6 +1,9 @@
-require_relative linkedlist, utils
+require_relative 'linkedlist'
+require_relative 'utils'
 
 class Task
+    MAX_STR = 32 # max string length
+
     # String name, TaskObject parent
     def initialize(name, parent)
         @name = name
@@ -10,6 +13,29 @@ class Task
         @session = 0; # session starting timestamp
         @sessionPrev = 0; # previous session time (hours)
         @created = Time.now
+    end
+
+    def printTask()
+        name_str = @name.ljust(32)
+        total_hours_str = format_total_hours(@t_hours)
+        session_str = @session.zero? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
+        prev_session_str = format_total_hours(@sessionPrev)
+        created_str = @created.strftime('%d-%m-%Y %H:%M')
+
+        "|#{name_str} | #{total_hours_str} | #{session_str} | #{prev_session_str} | #{created_str}"
+    end
+
+    private
+
+    def format_total_hours(hours)
+        if hours.is_a? Integer
+            hours.to_s.rjust(4)
+        else
+            integer_part = hours.to_i
+            fractional_part = hours - integer_part
+            fractional_str = fractional_part == 0.5 ? ' and a half' : ''
+            "#{integer_part}#{fractional_str}".rjust(4)
+        end
     end
 
 end
