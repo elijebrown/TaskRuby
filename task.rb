@@ -2,7 +2,7 @@ require_relative 'linkedList'
 require_relative 'utils'
 
 class Task
-    MAX_STR = 26 # max string length
+    MAX_STR = 12 # max string length
     attr_accessor :name, :parent, :children, :t_hours, :session, :sessionPrev, :created
 
     # String name, TaskObject parent
@@ -23,7 +23,7 @@ class Task
         prev_session_str = format_total_hours(@sessionPrev)
         created_str = @created.strftime('%d-%m-%Y %H:%M')
 
-        "|#{name_str} | #{total_hours_str} | #{session_str} | #{prev_session_str} | #{created_str}"
+        "#{name_str}  #{total_hours_str} | #{session_str} | #{prev_session_str} | #{created_str}"
     end
 
     private
@@ -90,13 +90,20 @@ class TaskList
     end
 
     def printTasks()
+        if @list.size == 0
+            return puts "Error: No tasks to print"
+        end
+        puts "Task Name | Total Hours | Session (time) | Previous Session (hours)| Date Created"
         stack = []
         stack.push([@list.head, 0]) # Start from the head of the list with depth 0
     
         while !stack.empty?
             node, depth = stack.pop
             next if node.nil?
-    
+            
+            if depth == 0
+                puts "---------------------------------------------------------"
+            end
             # You can use 'depth' here as needed, for example, to indent the output
             puts "#{' ' * depth * 2}#{node.data.printTask()}"
     
