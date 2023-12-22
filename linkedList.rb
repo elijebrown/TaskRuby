@@ -50,6 +50,20 @@ class DoublyLinkedList
             end
             node = node.next
         end
+    end
+
+    # pop
+    def pop()
+        if @head.nil?
+            return nil
+        else 
+            node = @tail
+            @tail = @tail.prev
+            @tail.next = nil
+            @size -= 1
+            return node.data
+        end
+    end
 
     # clear
     def clear
@@ -57,3 +71,4 @@ class DoublyLinkedList
         @tail = nil
         @size = 0
     end
+end

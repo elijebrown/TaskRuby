@@ -1,11 +1,12 @@
-require_relative 'linkedlist'
+require_relative 'linkedList'
 require_relative 'utils'
 
 class Task
-    MAX_STR = 32 # max string length
+    MAX_STR = 26 # max string length
+    attr_accessor :name, :parent, :children, :t_hours, :session, :sessionPrev, :created
 
     # String name, TaskObject parent
-    def initialize(name, parent)
+    def initialize(name, parent=nil)
         @name = name
         @parent = parent # nil if no parent
         @children = DoublyLinkedList.new # child list
@@ -16,7 +17,7 @@ class Task
     end
 
     def printTask()
-        name_str = @name.ljust(32)
+        name_str = @name.ljust(MAX_STR)
         total_hours_str = format_total_hours(@t_hours)
         session_str = @session.zero? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
         prev_session_str = format_total_hours(@sessionPrev)
@@ -48,44 +49,32 @@ class TaskList
         @list = DoublyLinkedList.new
     end
 
-    # add task (no parent)
-    def add(task)
+    # add task
+    def add(task, parent = nil) # if no parent supplied, nil
         # add to hash
         key = caseInsensitive(task.name)
         @hash[key] = task
+        if parent
+            parent.children.add(task)
         # add to list
-        @list.add(task)
+        else
+            @list.add(task)
+        end
     end
 
-    # add to parent
-    def add(task, parent)
-        # add to hash
-        key = caseInsensitive(task.name)
-        @hash[key] = task
-        # add to parent's child list
-        parent.children.add(task)
-    end
-
-    # remove task (no parent)
-    def remove(task)
+    # remove task
+    def remove(task, parent = nil) # if no parent supplied, nil
         # remove from hash
         key = caseInsensitive(task.name)
         @hash.delete(key)
-        # remove from list
-        @list.remove(task)
-    end
-
-    # remove from parent
-    def remove(task, parent)
-        # remove from hash
-        key = caseInsensitive(task.name)
-        @hash.delete(key)
-        # remove from parent's child list
-        parent.children.remove(task)
+        if parent
+            parent.children.remove(task)
+        else 
+            @list.remove(task)
+        end
     end
 
     # uses hash for O(1) lookup
-
     # search input is user input, formatted in function
     def search(name)
         key = caseInsensitive(name)
@@ -96,4 +85,33 @@ class TaskList
         return task.parent != nil # returns true or false
     end
 
+    def size()
+        return @list.size
+    end
+
+    def printTasks()
+        stack = []
+        stack.push([@list.head, 0]) # Start from the head of the list with depth 0
+    
+        while !stack.empty?
+            node, depth = stack.pop
+            next if node.nil?
+    
+            # You can use 'depth' here as needed, for example, to indent the output
+            puts "#{' ' * depth * 2}#{node.data.printTask()}"
+    
+            # Add the next node in the main list to the stack with the same depth
+            stack.push([node.next, depth]) if node.next
+    
+            # Add all children of the current node to the stack with incremented depth
+            child_node = node.data.children.head
+            while child_node
+                stack.push([child_node, depth + 1])
+                child_node = child_node.next
+            end
+        end
+    end
+    
+    
+    
 end
