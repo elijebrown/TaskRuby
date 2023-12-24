@@ -1,5 +1,6 @@
 require_relative 'linkedList'
 require_relative 'utils'
+require 'set'
 
 class Task
     MAX_STR = 12 # max string length
@@ -26,8 +27,6 @@ class Task
         "#{name_str}  #{total_hours_str} | #{session_str} | #{prev_session_str} | #{created_str}"
     end
 
-    private
-
     def format_total_hours(hours)
         if hours.is_a? Integer
             hours.to_s.rjust(4)
@@ -38,6 +37,32 @@ class Task
             "#{integer_part}#{fractional_str}".rjust(4)
         end
     end
+
+    def printChildren()
+        if @children.size == 0
+            return puts "no children"
+        else
+            n = @children.head 
+            while n != nil
+                puts n.printTask
+                n = n.next
+            end
+        end
+    end
+
+    def printAllChildren()
+        if @children.size == 0
+            return puts "no children"
+        else
+            n = @children.head 
+            while n != nil
+                puts n.data.printTask
+                n.data.printAllChildren
+                n = n.next
+            end
+        end
+    end
+
 
 end
 
@@ -50,12 +75,12 @@ class TaskList
     end
 
     # add task
-    def add(task, parent = nil) # if no parent supplied, nil
+    def add(task) # if no parent supplied, nil
         # add to hash
         key = caseInsensitive(task.name)
         @hash[key] = task
-        if parent
-            parent.children.add(task)
+        if task.parent
+            task.parent.children.add(task)
         # add to list
         else
             @list.add(task)
@@ -63,12 +88,12 @@ class TaskList
     end
 
     # remove task
-    def remove(task, parent = nil) # if no parent supplied, nil
+    def remove(task) # if no parent supplied, nil
         # remove from hash
         key = caseInsensitive(task.name)
         @hash.delete(key)
-        if parent
-            parent.children.remove(task)
+        if task.parent
+            task.parent.children.remove(task)
         else 
             @list.remove(task)
         end
@@ -93,24 +118,20 @@ class TaskList
         if @list.size == 0
             return puts "Error: No tasks to print"
         end
+    
         puts "Task Name | Total Hours | Session (time) | Previous Session (hours)| Date Created"
+        visited = Set.new
         stack = []
         stack.push([@list.head, 0]) # Start from the head of the list with depth 0
     
         while !stack.empty?
             node, depth = stack.pop
-            next if node.nil?
-            
-            if depth == 0
-                puts "---------------------------------------------------------"
-            end
-            # You can use 'depth' here as needed, for example, to indent the output
+            next if node.nil? || visited.include?(node.data)
+    
+            visited.add(node.data) # Mark the node as visited
             puts "#{' ' * depth * 2}#{node.data.printTask()}"
     
-            # Add the next node in the main list to the stack with the same depth
             stack.push([node.next, depth]) if node.next
-    
-            # Add all children of the current node to the stack with incremented depth
             child_node = node.data.children.head
             while child_node
                 stack.push([child_node, depth + 1])
@@ -118,6 +139,7 @@ class TaskList
             end
         end
     end
+    
     
     
     
