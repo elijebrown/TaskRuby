@@ -7,9 +7,10 @@ def mainMenu()
     puts "a Add Task"
     puts "r Remove Task"
     puts "s Select Task"
+    puts "t Start/Stop Tracking Task"
     puts "v View Tasks"
     puts "q Quit"
-    input = ARGF.gets.chomp # ARGF adds option for file input
+    input = ARGF.gets.strip # ARGF adds option for file input
     return input
 end
 
@@ -19,7 +20,7 @@ def selectMenu()
     puts "v  View direct Child/Sub Tasks"
     puts "va View all Child/Sub Tasks"
     puts "q  Back to main menu"
-    input = ARGF.gets.chomp # ARGF adds option for file input
+    input = ARGF.gets.strip # ARGF adds option for file input
     return input
 end
 
@@ -27,12 +28,12 @@ def action(i, list)
     case i
     when 'a' # add task
         puts "Enter a task name: "
-        n = ARGF.gets.chomp
+        n = ARGF.gets.strip
         p = nil
         k = nil
         loop do
             puts "Enter parent task's name, 0 if none: "
-            p = ARGF.gets.chomp
+            p = ARGF.gets.strip
             break if p == '0'
             k = list.search(p)
             break if k
@@ -48,7 +49,7 @@ def action(i, list)
         k = nil
         loop do
             puts "Enter name of task to remove: "
-            n = ARGF.gets.chomp
+            n = ARGF.gets.strip
             k = list.search(n)
             break if k
             puts "Error: Task not found, try again"
@@ -57,12 +58,18 @@ def action(i, list)
         puts "Removed task: #{n}"
     when 's'
         n = nil
-        while ((k = list.search(n)) == nil)
-            puts "Enter name of task: "
-            n = ARGF.gets.chomp # get input
-            if !k
+        k = nil
+        loop do 
+            puts "Enter name of task or -1 to go back: "
+            n = ARGF.gets.strip
+            k = list.search(n)
+            break if n == '-1'
+            if !k 
                 puts "Error: Task not found, try again"
             end
+        end
+        if n == '-1'
+            return
         end
         puts "Selected task: #{n.name}, choose an action, or quit to return to main menu"
         while true
@@ -84,10 +91,6 @@ def action(i, list)
             
         end
         puts n.printTask()
-
-
-        # search task return info but also store it so it can be manipulated
-        # needs a submenu
     when 'v'
         list.printTasks
     when 'q'
@@ -95,6 +98,7 @@ def action(i, list)
     else
         puts "Error: Invalid input"
     end
+    when 't' # tracking structure
 end
 
 def main()
