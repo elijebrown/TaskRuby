@@ -34,21 +34,24 @@ class DoublyLinkedList
     def remove(data)
         node = @head
         while node != nil
-            if node.data == data
-                if node == @head
-                    @head = @head.next
-                    @head.prev = nil
-                elsif node == @tail
-                    @tail = @tail.prev
-                    @tail.next = nil
-                else
-                    node.prev.next = node.next
-                    node.next.prev = node.prev
-                end
-                @size -= 1
-                return true
+            if node.data != data #not
+                node = node.next
+                next # continue
+            elsif @size == 1 #size=1
+                @head = nil
+                @tail = nil
+            elsif node == @head #head
+                @head = @head.next
+                @head.prev = nil
+            elsif node == @tail #tail
+                @tail = @tail.prev
+                @tail.next = nil
+            else # node is in the middle
+                node.prev.next = node.next
+                node.next.prev = node.prev
             end
-            node = node.next
+            @size -= 1
+            return true
         end
     end
 
