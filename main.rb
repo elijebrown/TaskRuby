@@ -1,6 +1,8 @@
 require_relative 'linkedList'
 require_relative 'utils'
 require_relative 'task'
+require_relative 'tasklist'
+
 
 def mainMenu()
     puts "Welcome to Task Manager, please select an option:"
@@ -94,18 +96,25 @@ def action(i, list)
     when 'v'
         list.printTasks
     when 'q'
+        return -1 # returns exit flag
+        # save to file first
         exit(0)
     else
         puts "Error: Invalid input"
     end
-    when 't' # tracking structure
+    # when 't' # tracking structure
+    # end
+    return 0
 end
 
 def main()
-    list = TaskList.new()
-    while true
-        action(mainMenu(),list)
+    list = TaskList.fileLoad("task.bin")
+    menuFlag = 0
+    while menuFlag == 0
+        menuFlag = action(mainMenu(),list) 
     end
+    #save
+    list.fileSave("task.bin")
 
 end 
 
