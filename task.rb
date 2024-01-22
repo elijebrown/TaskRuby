@@ -44,22 +44,18 @@ class Task
         else
             n = @children.head 
             while n != nil
-                puts n.printTask
+                puts n.data.printTask()
                 n = n.next
             end
         end
     end
 
     def printAllChildren()
-        if @children.size == 0
-            return puts "no children"
-        else
-            n = @children.head 
-            while n != nil
-                puts n.data.printTask
-                n.data.printAllChildren
-                n = n.next
-            end
+        n = @children.head 
+        while n != nil
+            puts n.data.printTask
+            n.data.printAllChildren
+            n = n.next
         end
     end
 
