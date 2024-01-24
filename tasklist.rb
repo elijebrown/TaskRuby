@@ -55,7 +55,7 @@ class TaskList
             return puts "Error: No tasks to print"
         end
     
-        puts "Task Name | Total Hours | Session (time) | Previous Session (hours)| Date Created"
+        puts "Task Name | Total Hours | Session Start Time | Prev Session Length | Date Created"
         visited = Set.new
         stack = []
         stack.push([@list.head, 0]) # Start from the head of the list with depth 0

@@ -5,14 +5,15 @@ require 'set'
 class Task
     MAX_STR = 12 # max string length
     attr_accessor :name, :parent, :children, :t_hours, :session, :sessionPrev, :created
-
+    # session is a Time object
+    #t_hours and sessionprev are floats
     # String name, TaskObject parent
     def initialize(name, parent=nil)
         @name = name
         @parent = parent # nil if no parent
         @children = DoublyLinkedList.new # child list
         @t_hours = 0 # total hours
-        @session = 0; # session starting timestamp
+        @session = nil; # session starting timestamp
         @sessionPrev = 0; # previous session time (hours)
         @created = Time.now
     end
@@ -20,7 +21,7 @@ class Task
     def printTask()
         name_str = @name.ljust(MAX_STR)
         t_hoursFormatted = formatHours(@t_hours)
-        sessionFormatted = @session.zero? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
+        sessionFormatted = @session.nil? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
         prevFormatted = formatHours(@sessionPrev)
         created_str = @created.strftime('%d-%m-%Y')
 
@@ -34,7 +35,7 @@ class Task
       
         # Formats the string to have hours and minutes
         format('%02d:%02d', hours, minutes)
-      end
+    end
       
 
     def printChildren()
@@ -66,8 +67,10 @@ class Task
         diff = Time.now - @session
         time = diff/3600.0
         @sessionPrev = time
-        @session = 0 #(aka nil)
+        @session = nil
         @t_hours += time
+
+        puts "Tracked #{@name} for #{formatHours(time)}"
 
         # parent adding structure
         temp = @parent
@@ -76,14 +79,5 @@ class Task
             temp = temp.parent
         end
     end
-
-    def printTime()
-        # print hours and minutes
-        puts "#{@name} tracked for #{@t_hours} hours"
-    end
-
-
-
-
 end
 
