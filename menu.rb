@@ -67,7 +67,12 @@ def trackM(list)
     if task == -1 # go back
         return
     end
-    if task.session == 0 # start tracking  
+    if task.session == 0 # start tracking
+        task.trackStart()
+        puts "Started tracking task: #{task.name}"
+    else # stop tracking
+        task.trackStop()
+        puts "Stopped tracking task: #{task.name}"  
     end
     
 end

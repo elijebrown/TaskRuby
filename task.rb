@@ -19,24 +19,23 @@ class Task
 
     def printTask()
         name_str = @name.ljust(MAX_STR)
-        total_hours_str = format_total_hours(@t_hours)
-        session_str = @session.zero? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
-        prev_session_str = format_total_hours(@sessionPrev)
-        created_str = @created.strftime('%d-%m-%Y %H:%M')
+        t_hoursFormatted = formatHours(@t_hours)
+        sessionFormatted = @session.zero? ? 'n/a'.ljust(5) : @session.strftime('%H:%M')
+        prevFormatted = formatHours(@sessionPrev)
+        created_str = @created.strftime('%d-%m-%Y')
 
-        "#{name_str}  #{total_hours_str} | #{session_str} | #{prev_session_str} | #{created_str}"
+        "#{name_str}  #{t_hoursFormatted} | #{sessionFormatted} | #{prevFormatted} | #{created_str}"
     end
 
-    def format_total_hours(hours)
-        if hours.is_a? Integer
-            hours.to_s.rjust(4)
-        else
-            integer_part = hours.to_i
-            fractional_part = hours - integer_part
-            fractional_str = fractional_part == 0.5 ? ' and a half' : ''
-            "#{integer_part}#{fractional_str}".rjust(4)
-        end
-    end
+    def formatHours(total)
+        hours = total.to_i  # Extracts the hour part
+        diff = total - hours # Extracts the fractional hour part
+        minutes = (diff * 60).round
+      
+        # Formats the string to have hours and minutes
+        format('%02d:%02d', hours, minutes)
+      end
+      
 
     def printChildren()
         if @children.size == 0
@@ -58,6 +57,32 @@ class Task
             n = n.next
         end
     end
+
+    def trackStart()
+        @session = Time.now
+    end
+
+    def trackStop()
+        diff = Time.now - @session
+        time = diff/3600.0
+        @sessionPrev = time
+        @session = 0 #(aka nil)
+        @t_hours += time
+
+        # parent adding structure
+        temp = @parent
+        while temp != nil
+            temp.t_hours += time
+            temp = temp.parent
+        end
+    end
+
+    def printTime()
+        # print hours and minutes
+        puts "#{@name} tracked for #{@t_hours} hours"
+    end
+
+
 
 
 end

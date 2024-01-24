@@ -19,6 +19,8 @@ def action(i, list)
         puts "Saved changes"
     when 'q'
         return -1 # returns exit flag
+    when 't'
+        trackM(list)
     else
         puts "Error: Invalid input"
     end

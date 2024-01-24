@@ -83,9 +83,14 @@ class TaskList
     end
 
     def self.fileLoad(file_path)
-        File.open(file_path, "rb") do |file|
-            Marshal.load(file)
+        # check if file exists
+        if !File.exist?(file_path)
+            return TaskList.new
+        end
+        begin
+            File.open(file_path, "rb") { |file| Marshal.load(file) }
+        rescue # error loading file
+            return TaskList.new
         end
     end
-    
 end
