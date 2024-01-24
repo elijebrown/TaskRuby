@@ -21,7 +21,7 @@ TaskRuby does not use any additional Ruby Gems, which means that it is compatibl
 - To stay organized, you are encouraged to take advantage of the Task/SubTask features. When creating a new task, you can designate a *parent* task. This allows you to group smaller tasks under larger ones. Note that if you are tracking a sub/child task, the tracked session time will be added to all parent tasks, up to the root parent. Below is an example of how you might organize your TaskRuby tasks for a comprehensive workflow:  
   
 - COMP2402 - Data Structures and Algorithms (*the parent task*)
-    - Assignment 1 (*a smaller sub-task)
+    - Assignment 1 (*a smaller sub-task*)
         - Part 1
         - Part 2
     - Exam Study
@@ -36,11 +36,11 @@ In this example, if you started a tracking session while studying Graphs, the tr
 - task.rb:       Contains the Task class and its member functions
 - taskList.rb:   Contains the TaskList class and its member functions
 - menu.rb:       Contains all of the functions defined in the main menu of the program
-- selectMenu.rb  Contains all of the functions defined in the select task submenu
-- utils.rb       Contains generic utility functions that are used repeatedly throughout the program.
-- LICENSE        Read the license file for terms and conditions regarding open-source use of this program.
+- selectMenu.rb: Contains all of the functions defined in the select task submenu
+- utils.rb:      Contains generic utility functions that are used repeatedly throughout the program.
+- LICENSE:       Read the license file for terms and conditions regarding open-source use of this program.
 
 ## Future Updates:
-- An executable package with a setup guide. No terminal needed. Nice and easy. 
+- An executable package with a setup guide. Nice and easy. 
 - A settings config file: Customize various settings to tailor your user-experience to your exact needs
 
